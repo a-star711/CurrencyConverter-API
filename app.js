@@ -20,11 +20,6 @@ app.use('/rates', ratesRouter);
 app.use('/convert', convertRouter);
 app.use('/sort', sortingRouter);
 
-
-app.get('/test', (req,res) => {
-  res.send('OK')
-})
-
 app.use(notFoundHandler)
 app.use(errorHandler);
 
