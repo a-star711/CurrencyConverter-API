@@ -9,7 +9,7 @@ const convertRates = async (req, res) => {
     throw new BadRequestError("Currency and value are required");
   }
 
-  const ratesData = await Usdbase.findOne({ base_code: "USD" }).lean();
+  const ratesData = await Usdbase.findOne({ base_code: "USD" });
 
   if (!ratesData) {
     throw new NotFoundError("Rates not found in the database");

@@ -19,13 +19,7 @@ const rateLimit = require("express-rate-limit");
 app.set("trust proxy", 1);
 
 app.use(helmet());
-app.use(
-  cors({
-    origin: ["https://currency-converter-ui-psi.vercel.app"],
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+app.use(cors());
 app.use(xss());
 app.use(express.json());
 
@@ -48,9 +42,9 @@ const port = process.env.PORT || 8082;
 const start = async () => {
   try {
     await connectDB(process.env.MONGO_URI);
-    app.listen(port, () =>
-      console.log(`Server is listening on port ${port}...`)
-    );
+    // app.listen(port, () =>
+    //   console.log(`Server is listening on port ${port}...`)
+    // );
   } catch (error) {
     console.log(error);
   }

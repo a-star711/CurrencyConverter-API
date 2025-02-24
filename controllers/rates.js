@@ -7,11 +7,11 @@ const getRates = async (req, res) => {
   const now = new Date();
   const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000);
 
-  const existingRates = await Usdbase.findOne({ base_code: "USD" });
+  const rates = await Usdbase.findOne({ base_code: "USD" });
 
-  if (existingRates && existingRates.updatedAt > twoHoursAgo) {
+  if (rates && rates.updatedAt > twoHoursAgo) {
     return res.json({
-      conversion_rates: existingRates.conversion_rates,
+      conversion_rates: rates.conversion_rates,
       cached: true,
     });
   }
@@ -25,13 +25,13 @@ const getRates = async (req, res) => {
   }
   const data = await response.json();
 
-  const savedRates = await Usdbase.findOneAndUpdate(
+  const latestRates = await Usdbase.findOneAndUpdate(
     { base_code: "USD" },
     { conversion_rates: data.conversion_rates, updatedAt: new Date() },
     { upsert: true, new: true }
   );
 
-  res.status(StatusCodes.OK).json(savedRates);
+  res.status(StatusCodes.OK).json(latestRates);
 };
 
 module.exports = {
