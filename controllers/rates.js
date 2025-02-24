@@ -1,16 +1,15 @@
 const Usdbase = require("../models/Usdbase");
 const { StatusCodes } = require("http-status-codes");
-
-const apiUrl = `https://v6.exchangerate-api.com/v6/${process.env.API_KEY}/latest/USD`;
-const now = new Date();
-const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000);
+const { EXCHANGE_RATE_API } = require("../utils/constants");
 
 const getRates = async (req, res) => {
+  const apiUrl = EXCHANGE_RATE_API.BASE_URL;
+  const now = new Date();
+  const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000);
+
   const existingRates = await Usdbase.findOne({ base_code: "USD" });
 
   if (existingRates && existingRates.updatedAt > twoHoursAgo) {
-
-
     return res.json({
       conversion_rates: existingRates.conversion_rates,
       cached: true,

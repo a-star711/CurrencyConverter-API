@@ -1,19 +1,18 @@
-const Usdbase = require('../models/Usdbase');
-const { StatusCodes } = require('http-status-codes');
-const { BadRequestError, NotFoundError } = require('../errors')
-
+const Usdbase = require("../models/Usdbase");
+const { StatusCodes } = require("http-status-codes");
+const { BadRequestError, NotFoundError } = require("../errors");
 
 const convertRates = async (req, res) => {
   const { currency, value } = req.body;
 
   if (!currency || value === undefined || value === null || isNaN(value)) {
-    throw new BadRequestError('Currency and value are required');
+    throw new BadRequestError("Currency and value are required");
   }
 
   const ratesData = await Usdbase.findOne({ base_code: "USD" }).lean();
 
   if (!ratesData) {
-    throw new NotFoundError('Rates not found in the database');
+    throw new NotFoundError("Rates not found in the database");
   }
 
   const rates = ratesData.conversion_rates;
@@ -33,4 +32,3 @@ const convertRates = async (req, res) => {
 module.exports = {
   convertRates,
 };
-
