@@ -35,9 +35,24 @@ app.use("/rates", ratesRouter);
 app.use("/convert", convertRouter);
 app.use("/sort", sortingRouter);
 
+app.get("/", (req, res) => {
+  res.send(`
+    <h2>Back-end API for Currency Converter</h2>
+    <p>Available endpoints:</p>
+    <ul>
+      <li><a href="/rates">/rates</a> - Get exchange rates (GET)</li>
+      <li>/convert - Convert currency (POST request required)  {
+      "currency": string,
+      "value": number
+       }</li>
+      <li><a href="/sort">/sort</a> - Sort exchange rates (GET)</li>
+    </ul>
+    <p>Use a tool like Postman or cURL to send a POST request to <strong>/convert</strong>.</p>
+  `);
+});
+
 app.use(notFoundHandler);
 app.use(errorHandler);
-
 
 const start = async () => {
   try {
