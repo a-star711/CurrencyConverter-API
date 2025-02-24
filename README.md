@@ -12,5 +12,6 @@ The server runs by default on PORT 8082.
 
 Ensure you configure a .env file with the following variables:
 MONGO_URI=
-API_KEY for https://www.exchangerate-api.com/ used to fetch the currency rates.
+
+API_KEY= you can get free key at https://www.exchangerate-api.com/ used to fetch the currency rates.
 
