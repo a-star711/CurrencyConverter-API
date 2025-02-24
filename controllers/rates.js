@@ -1,6 +1,6 @@
 const Usdbase = require("../models/Usdbase");
 const { StatusCodes } = require("http-status-codes");
-const { EXCHANGE_RATE_API } = require("../utils/constants");
+const { EXCHANGE_RATE_API } = require("../utils/config");
 
 const getRates = async (req, res) => {
   const apiUrl = EXCHANGE_RATE_API.BASE_URL;
