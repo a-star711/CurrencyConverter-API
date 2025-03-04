@@ -1,5 +1,5 @@
 🚀 **Currency Converter API**  
-A Node.js RESTful API for currency converter.
+A Node.js RESTful API serving as back-end for https://github.com/a-star711/CurrencyConverter-UI.
 
 🌐 **Live Demo**  
 - Deployed on Vercel: https://currency-converter-api-sigma.vercel.app/

@@ -18,6 +18,14 @@ const rateLimit = require("express-rate-limit");
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpecs = require('./docs/swagger'); 
 
+const swaggerOptions = {
+  customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css',
+  customJs: [
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.js'
+  ]
+};
+
 const limiter = rateLimit(rateLimitObj);
 
 app.set("trust proxy", 1);
@@ -33,7 +41,7 @@ app.get('/', (req, res) => {
 });
 
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs, swaggerOptions));
 
 app.use("/api/v1/rates", ratesRouter);
 
