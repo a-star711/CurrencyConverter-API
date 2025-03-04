@@ -1,17 +1,24 @@
-A backend service for Currency Converter UI(https://currency-converter-ui-psi.vercel.app/), built with Express.js, MongoDB Atlas, and Mongoose.
+🚀 **Currency Converter API**  
+A Node.js RESTful API for currency converter.
 
-To run this project locally, follow these steps:
+🌐 **Live Demo**  
+- Deployed on Vercel: https://currency-converter-api-sigma.vercel.app/
+- Access the Swagger documentation for testing and exploring endpoints.
 
-clone this Repository git clone https://github.com/a-star711/CurrencyConverter-API
+🛠 **Tech Stack**  
+- **Back-End:** Node.js, Express.js  
+- **Database:** MongoDB (Atlas)  
+- **Security:** JWT, helmet, CORS, rate-limiting  
+- **Documentation:** Swagger UI  
 
-Install Dependencies npm install
 
--node app.js
+| **Endpoint**              | **Method** | **Description**               
+|---------------------------|------------|-------------------------------
+| `/api/v1/rates/`          | GET        | Fetch latest currency rates           
+| `/api/v1/rates/sort`      | GET        | Sort rates       
+| `/api/v1/rates/convert`   | POST       | Convert rates        
 
-The server runs by default on PORT 8082.
 
-Ensure you configure a .env file with the following variables:
-MONGO_URI=
 
-API_KEY= you can get free key at https://www.exchangerate-api.com/ used to fetch the currency rates.
-
+📄 **License**  
+This project is open-source and available under the MIT License.

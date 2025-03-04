@@ -5,8 +5,6 @@ const errorHandler = require("./middleware/error-handler");
 const notFoundHandler = require("./middleware/not-found");
 
 const ratesRouter = require("./routes/rates");
-const convertRouter = require("./routes/convert");
-const sortingRouter = require("./routes/sortRates");
 const { port, mongoURI, rateLimitObj } = require("./utils/config");
 
 const app = express();
@@ -16,6 +14,9 @@ const cors = require("cors");
 const helmet = require("helmet");
 const xss = require("xss-clean");
 const rateLimit = require("express-rate-limit");
+
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpecs = require('./docs/swagger'); 
 
 const limiter = rateLimit(rateLimitObj);
 
@@ -27,27 +28,14 @@ app.use(cors());
 app.use(xss());
 app.use(express.json());
 
-
-
-app.use("/rates", ratesRouter);
-app.use("/convert", convertRouter);
-app.use("/sort", sortingRouter);
-
-app.get("/", (req, res) => {
-  res.send(`
-    <h2>Back-end API for Currency Converter</h2>
-    <p>Available endpoints:</p>
-    <ul>
-      <li><a href="/rates">/rates</a> - Get exchange rates (GET)</li>
-      <li>/convert - Convert currency (POST request required)  {
-      "currency": string,
-      "value": number
-       }</li>
-      <li><a href="/sort">/sort</a> - Sort exchange rates (GET)</li>
-    </ul>
-    <p>Use a tool like Postman or cURL to send a POST request to <strong>/convert</strong>.</p>
-  `);
+app.get('/', (req, res) => {
+  res.redirect('/api-docs');
 });
+
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
+
+app.use("/api/v1/rates", ratesRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);
