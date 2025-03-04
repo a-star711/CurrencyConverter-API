@@ -18,6 +18,16 @@ const rateLimit = require("express-rate-limit");
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpecs = require('./docs/swagger'); 
 
+const swaggerOptions = {
+  customCssUrl: 'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css',
+  customJs: [
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.js'
+  ]
+};
+
+
+
 const limiter = rateLimit(rateLimitObj);
 
 app.set("trust proxy", 1);
@@ -32,14 +42,7 @@ app.get('/', (req, res) => {
   res.redirect('/api-docs');
 });
 
-app.use('/api-docs', express.static('node_modules/swagger-ui-dist'));
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs, {
-  customCssUrl: '/api-docs/swagger-ui.css',
-  customJs: [
-    '/api-docs/swagger-ui-bundle.js',
-    '/api-docs/swagger-ui-standalone-preset.js'
-  ]
-}));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs, swaggerOptions));
 app.use("/api/v1/rates", ratesRouter);
 
 app.use(notFoundHandler);
