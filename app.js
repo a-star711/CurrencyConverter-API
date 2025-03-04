@@ -32,7 +32,28 @@ const limiter = rateLimit(rateLimitObj);
 
 app.set("trust proxy", 1);
 
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: [
+          "'self'", 
+          "https://cdnjs.cloudflare.com", 
+          "https://currency-converter-api-sigma.vercel.app"
+        ],
+        styleSrc: [
+          "'self'", 
+          "https://cdnjs.cloudflare.com", 
+          "https://currency-converter-api-sigma.vercel.app"
+        ],
+        imgSrc: ["'self'", "data:"],
+        connectSrc: ["'self'", "https://currency-converter-api-sigma.vercel.app"],
+      },
+    },
+  })
+);
+
 app.use(limiter);
 app.use(cors());
 app.use(xss());
