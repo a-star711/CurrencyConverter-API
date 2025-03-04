@@ -11,7 +11,7 @@ const swaggerOptions = {
     servers: [
     
       {
-        url: 'https://currency-converter-api-sigma.vercel.app/',
+        url: 'https://currency-converter-api-sigma.vercel.app',
         description: 'Production server',
       },
         {
