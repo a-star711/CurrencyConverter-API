@@ -32,10 +32,17 @@ const limiter = rateLimit(rateLimitObj);
 
 app.set("trust proxy", 1);
 
-app.use((req, res, next) => {
-  res.locals.nonce = crypto.randomBytes(16).toString("base64");
+app.use("/api-docs", (req, res, next) => {
+  const send = res.send;
+  res.send = html => {
+    const injectedHtml = html
+      .replace(/<script>/g, `<script nonce="${res.locals.nonce}">`)
+      .replace(/<style>/g, `<style nonce="${res.locals.nonce}">`);
+    send.call(res, injectedHtml);
+  };
   next();
 });
+
 
 app.use(
   helmet({
@@ -68,16 +75,6 @@ app.get('/', (req, res) => {
   res.redirect('/api-docs');
 });
 
-app.use("/api-docs", (req, res, next) => {
-  const send = res.send;
-  res.send = html => {
-    const injectedHtml = html
-      .replace(/<script>/g, `<script nonce="${res.locals.nonce}">`)
-      .replace(/<style>/g, `<style nonce="${res.locals.nonce}">`);
-    send.call(res, injectedHtml);
-  };
-  next();
-});
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs, swaggerOptions));
 app.use("/api/v1/rates", ratesRouter);
