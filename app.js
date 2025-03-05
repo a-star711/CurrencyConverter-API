@@ -3,6 +3,7 @@ require("express-async-errors");
 const express = require("express");
 const errorHandler = require("./middleware/error-handler");
 const notFoundHandler = require("./middleware/not-found");
+const crypto = require("crypto");
 
 const ratesRouter = require("./routes/rates");
 const { port, mongoURI, rateLimitObj } = require("./utils/config");
@@ -27,10 +28,14 @@ const swaggerOptions = {
 };
 
 
-
 const limiter = rateLimit(rateLimitObj);
 
 app.set("trust proxy", 1);
+
+app.use((req, res, next) => {
+  res.locals.nonce = crypto.randomBytes(16).toString("base64");
+  next();
+});
 
 app.use(
   helmet({
@@ -38,14 +43,16 @@ app.use(
       directives: {
         defaultSrc: ["'self'"],
         scriptSrc: [
-          "'self'", 
-          "https://cdnjs.cloudflare.com", 
-          "https://currency-converter-api-sigma.vercel.app"
+          "'self'",
+          "https://cdnjs.cloudflare.com",
+          "https://currency-converter-api-sigma.vercel.app",
+          (req, res) => `'nonce-${res.locals.nonce}'`
         ],
         styleSrc: [
-          "'self'", 
-          "https://cdnjs.cloudflare.com", 
-          "https://currency-converter-api-sigma.vercel.app"
+          "'self'",
+          "https://cdnjs.cloudflare.com",
+          "https://currency-converter-api-sigma.vercel.app",
+          (req, res) => `'nonce-${res.locals.nonce}'`
         ],
         imgSrc: ["'self'", "data:"],
         connectSrc: ["'self'", "https://currency-converter-api-sigma.vercel.app"],
