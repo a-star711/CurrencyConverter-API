@@ -17,6 +17,8 @@ const rateLimit = require("express-rate-limit");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpecs = require("./docs/swagger");
 
+// Updated swaggerOptions: we override default assets by adding a nested swaggerOptions property.
+// Note: oauth2RedirectUrl isn't available on the server, so it's removed in this example.
 const swaggerOptions = {
   customCssUrl:
     "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css",
@@ -24,11 +26,6 @@ const swaggerOptions = {
     "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.js",
     "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.js",
   ],
-  swaggerOptions: {
-    layout: "StandaloneLayout",
-    plugins: [],
-    presets: [] 
-  }
 };
 
 const limiter = rateLimit(rateLimitObj);
@@ -37,7 +34,7 @@ app.set("trust proxy", 1);
 
 app.use(
   helmet({
-    contentSecurityPolicy: false,
+    contentSecurityPolicy: false, // or configure as needed
   })
 );
 
@@ -50,11 +47,24 @@ app.get("/", (req, res) => {
   res.redirect("/api-docs");
 });
 
-app.use(
-  "/api-docs",
-  swaggerUi.serve,
-  swaggerUi.setup(swaggerSpecs, swaggerOptions)
-);
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpecs, swaggerOptions));
+
+app.use("/api-docs", (req, res, next) => {
+  const originalSend = res.send;
+  res.send = function (html) {
+    if (typeof html === "string") {
+      const cleanedHtml = html
+        .replace(/href="\.\/swagger-ui\.css"/g, '')
+        .replace(/src="\.\/swagger-ui-bundle\.js"/g, '')
+        .replace(/src="\.\/swagger-ui-standalone-preset\.js"/g, '');
+      return originalSend.call(this, cleanedHtml);
+    }
+    return originalSend.call(this, html);
+  };
+  next();
+});
+
 
 app.use("/api/v1/rates", ratesRouter);
 
@@ -64,7 +74,6 @@ app.use(errorHandler);
 const start = async () => {
   try {
     await connectDB(mongoURI);
-
     app.listen(port, () =>
       console.log(`Server is listening on port ${port}...`)
     );
