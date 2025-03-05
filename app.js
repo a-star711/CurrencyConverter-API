@@ -45,19 +45,17 @@ app.use(
         scriptSrc: [
           "'self'",
           "https://cdnjs.cloudflare.com",
-          "https://currency-converter-api-sigma.vercel.app",
           (req, res) => `'nonce-${res.locals.nonce}'`
         ],
         styleSrc: [
           "'self'",
           "https://cdnjs.cloudflare.com",
-          "https://currency-converter-api-sigma.vercel.app",
-          (req, res) => `'nonce-${res.locals.nonce}'`
+          "'unsafe-inline'" 
         ],
-        imgSrc: ["'self'", "data:"],
-        connectSrc: ["'self'", "https://currency-converter-api-sigma.vercel.app"],
-      },
-    },
+        imgSrc: ["'self'", "data:", "https://validator.swagger.io"],
+        connectSrc: ["'self'"]
+      }
+    }
   })
 );
 
@@ -68,6 +66,17 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
   res.redirect('/api-docs');
+});
+
+app.use("/api-docs", (req, res, next) => {
+  const send = res.send;
+  res.send = html => {
+    const injectedHtml = html
+      .replace(/<script>/g, `<script nonce="${res.locals.nonce}">`)
+      .replace(/<style>/g, `<style nonce="${res.locals.nonce}">`);
+    send.call(res, injectedHtml);
+  };
+  next();
 });
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs, swaggerOptions));
