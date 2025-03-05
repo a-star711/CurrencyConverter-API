@@ -1,11 +1,10 @@
-🚀 **Currency Converter API**  
+Currency Converter API
 A Node.js RESTful API serving as back-end for https://github.com/a-star711/CurrencyConverter-UI.
 
-🌐 **Live Demo**  
 - Deployed on Vercel: https://currency-converter-api-sigma.vercel.app/
 - Access the Swagger documentation for testing and exploring endpoints.
 
-🛠 **Tech Stack**  
+  **Tech Stack**  
 - **Back-End:** Node.js, Express.js  
 - **Database:** MongoDB (Atlas)  
 - **Security:** JWT, helmet, CORS, rate-limiting  
@@ -20,5 +19,4 @@ A Node.js RESTful API serving as back-end for https://github.com/a-star711/Curre
 
 
 
-📄 **License**  
 This project is open-source and available under the MIT License.
